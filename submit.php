@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mobile = htmlspecialchars($_POST['mobile'] ?? '');
 
     // Optional Logging
-    file_put_contents("debug-log.txt", data: "Name: $name | Email: $email | Phone: $mobile\n", FILE_APPEND);
+    file_put_contents("debug-log.txt", "Name: $name | Email: $email | Phone: $mobile\n", FILE_APPEND);
 
     $mail = new PHPMailer(true);
 
@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->addAddress('rock83694@gmail.com');
 
         $mail->isHTML(true);
-        $mail->Subject = 'New Lead Crystal Prime Meridian';
+        $mail->Subject = 'New Lead Narang Mulund';
         $mail->Body = "
-            <h2>New Lead Submission - Crystal Prime Meridian</h2>
+            <h2>New Lead Submission - Narang Mulund</h2>
             <p><strong>Name:</strong> {$name}</p>
             <p><strong>Email:</strong> {$email}</p>
             <p><strong>Phone:</strong> {$mobile}</p>

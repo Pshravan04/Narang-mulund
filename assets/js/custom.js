@@ -225,10 +225,10 @@ function submitForm(event, formName) {
 
 
     // --- AJAX Request ---
-    console.log("Sending AJAX request to send_email.php with data:", form_data); // DEBUG
+    console.log("Sending AJAX request to submit.php with data:", form_data); // DEBUG
     $.ajax({
         type: 'POST',
-        url: 'send_email.php',
+        url: 'submit.php',
         data: form_data,
         success: function (response) {
             console.log("AJAX Success Response:", response); // DEBUG
@@ -253,12 +253,11 @@ function submitForm(event, formName) {
             }
 
             if (formnameValue === 'Brochure') {
-                window.location.href = 'thank-you55d255d2.html?formName=Brochure';
-                //  window.location.href = 'thank-you.html';
+                window.location.href = 'thankyou.html?formName=Brochure';
             } else if (formnameValue === 'Sample-Flat') {
-                window.location.href = 'thank-you16da16da.html?formName=Sample-Flat';
+                window.location.href = 'thankyou.html?formName=Sample-Flat';
             } else {
-                window.location.href = 'thank-you.html';
+                window.location.href = 'thankyou.html';
             }
         },
         error: function (xhr, status, error) {
@@ -286,7 +285,7 @@ function submitForm(event, formName) {
 (function () {
     let utmParams = "";
 
-    const currentUrl = new URL(window.location.html);
+    const currentUrl = new URL(window.location.href);
 
     if (currentUrl.search.length) {
         utmParams = currentUrl.search;
@@ -311,3 +310,160 @@ function submitForm(event, formName) {
 })();
 
 
+
+/* Extracted from index.html */
+$(window).on("load", function () {
+    // Wait for 5 seconds (5000 milliseconds) after the page has loaded
+    setTimeout(function () {
+        $("#autoPopup").modal("show");
+    }, 5000);
+});
+
+$(document).ready(function () {
+    $(".js-gallery").slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: true,
+        fade: false,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        adaptiveHeight: true,
+        prevArrow: '<span class="gallery-arrow mod-prev"><i class="fas fa-arrow-left"></i></span>',
+        nextArrow: '<span class="gallery-arrow mod-next"><i class="fas fa-arrow-right"></i></span>',
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    centerMode: true,
+                    centerPadding: "0px",
+                    slidesToShow: 4,
+                },
+            },
+            {
+                breakpoint: 980,
+                settings: {
+                    centerMode: true,
+                    centerPadding: "0px",
+                    slidesToShow: 3,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    centerMode: false,
+                    centerPadding: "0px",
+                    slidesToShow: 1,
+                },
+            },
+        ],
+    });
+    $(".js-gallery").slickLightbox({
+        src: "src",
+        itemSelector: ".js-gallery-popup img",
+        background: "rgba(0, 0, 0, .7)",
+    });
+
+    $("#slick1").slick({
+        rows: 2,
+        dots: false,
+        arrows: true,
+        prevArrow: '<span class="amenities-arrow mod-prev"><i class="fas fa-arrow-left"></i></span>',
+        nextArrow: '<span class="amenities-arrow mod-next"><i class="fas fa-arrow-right"></i></span>',
+        infinite: true,
+        speed: 300,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    centerMode: true,
+                    centerPadding: "0px",
+                    slidesToShow: 4,
+                },
+            },
+            {
+                breakpoint: 980,
+                settings: {
+                    centerMode: true,
+                    centerPadding: "0px",
+                    slidesToShow: 3,
+                },
+            },
+            {
+                breakpoint: 480,
+                row: 1,
+                settings: {
+                    centerMode: true,
+                    centerPadding: "0px",
+                    slidesToShow: 1,
+                },
+            },
+        ],
+    });
+});
+
+$(document).ready(function () {
+    var itiInstances = [];
+
+    $(".phone").each(function () {
+        var input = this;
+        var iti = window.intlTelInput(input, {
+            initialCountry: "in", // ✅ Default India
+            separateDialCode: true,
+            allowDropdown: false,
+            utilsScript: "assets/js/utils.js",
+        });
+        itiInstances.push({ input: input, iti: iti });
+
+        // Update values on country change as well
+        $(input).on("countrychange", function () {
+            $(input).trigger("keyup");
+        });
+    });
+
+    $(".phone").on("keyup change", function () {
+        var input = this;
+        // ✅ find the corresponding iti instance for this input
+        var instance = itiInstances.find((item) => item.input === input);
+        if (!instance) return;
+
+        var fullNumber = instance.iti.getNumber(); // E.164 format e.g. +919876543210
+        var countryData = instance.iti.getSelectedCountryData();
+
+        //$(input).closest('form').find("input[name='fullMobileNo']").val(fullNumber);
+        $(input).closest("form").find("input[name='iso_code']").val(countryData.iso2);
+        $(input)
+            .closest("form")
+            .find("input[name='mobileExt']")
+            .val("+" + countryData.dialCode);
+    });
+});
+var querystring = window.location.href;
+var aaa = querystring.split("?");
+jQuery("#utmtracking a").each(function () {
+    var href = jQuery(this).attr("href");
+    var href2 = href + "?" + aaa[1];
+    jQuery(this).attr("href", href2);
+});
+
+var current_url = querystring;
+//alert(current_url);
+var str2 = "utm_";
+if (current_url.indexOf(str2) != -1) {
+    setCookie("cp_utm_data", current_url, 1);
+}
+
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+setInterval(function () {
+    $(".mod-next").triggerHandler("click");
+}, 2000);
